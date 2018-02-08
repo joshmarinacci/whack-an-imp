@@ -1,0 +1,77 @@
+<html>
+<head>
+    <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
+    <script src="//cdn.rawgit.com/donmccurdy/aframe-extras/v3.13.1/dist/aframe-extras.min.js"></script>
+    <script>
+        $ = (sel) => document.querySelector(sel)
+        $$ = (sel) => document.querySelectorAll(sel)
+        on = (elem, type, hand) => elem.addEventListener(type,hand)
+    </script>
+
+</head>
+<body>
+<a-scene physics="debug:true; restitution: 0; gravity:-4.0; contactEquationStiffness:100000000; contactEquationRelaxation: 0.5;">
+    <a-entity camera look-controls position="0 1.5 0">
+        <a-cursor></a-cursor>
+        <a-box id="weapon" position="0 2 -4" width="0.25" height="1" depth="1" color="blue" static-body="shape:box; mass:2"></a-box>
+        <a-text id="score" value="Score" position="-0.2 -0.5 -1" color="red" width="5" anchor="left"></a-text>
+    </a-entity>
+
+<!--  -->
+    <a-box id='box' position="0 0.1 -4" rotation="0 0 0" width="0.4" depth=0.25 height="0.25" color="red" dynamic-body="shape:box; mass:2"></a-box>
+
+    <a-cylinder position="0 0 -4" color="yellow" radius="0.75" height="1"></a-cylinder>
+
+    <a-plane position="0 0 -4" rotation="-90 0 0" width="10" height="10" color="teal" static-body></a-plane>
+
+
+    <a-sky color="#ECECEC"></a-sky>
+</a-scene>
+
+<script>
+    let score = 0;
+    let hit = false
+    const resetBall = () => {
+        console.log("reset")
+        $("#box").body.position.set(0, 0.3,-4)
+        $("#box").body.velocity.set(0, 5,0)
+        $("#box").body.angularVelocity.set(0, 0,0)
+        hit = false
+
+    }
+//    on($('#cursor'))
+
+//    on(document,'click',(e)=>{
+//        console.log("clicked")
+//        const el = $("#box")
+//        el.body.applyImpulse(
+//            new CANNON.Vec3(0,10,0),
+//            new CANNON.Vec3(0,0.1,0)
+//        )
+//    })
+
+//    on(document,'mousemove',(e) => {
+//        const weapon = $("#weapon");
+////        weapon.body.position.set(
+////            (e.clientX-document.body.clientWidth/2)/100,
+////            (document.body.clientHeight/2-e.clientY)/100,
+////            -4)
+//        weapon.setAttribute('position',{
+//            x:(e.clientX-document.body.clientWidth/2)/100,
+//            y:(document.body.clientHeight/2-e.clientY)/100,z:-4})
+//    })
+
+    on($("#weapon"),'collide',(e)=>{
+        const box = $("#box")
+        if(e.detail.body.id === box.body.id && !hit) {
+            hit = true
+            score = score + 1
+            $("#score").setAttribute('text','value','Score '+score)
+            setTimeout(resetBall,2000)
+        }
+    })
+
+</script>
+
+</body>
+</html>
