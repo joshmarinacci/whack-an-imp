@@ -11,6 +11,13 @@
 </head>
 <body>
 <a-scene physics="debug:true; restitution: 0; gravity:-4.0; contactEquationStiffness:100000000; contactEquationRelaxation: 0.5;">
+    <a-assets>
+        <a-asset-item id="imp" src="models/imp/scene.gltf"></a-asset-item>
+        <a-asset-item id="cauldron" src="models/cauldron/scene.gltf"></a-asset-item>
+        <a-asset-item id="staff" src="models/staff/scene.gltf"></a-asset-item>
+        <a-asset-item id="moon" src="models/moon/scene.gltf"></a-asset-item>
+        <a-asset-item id="rock1" src="models/rock1/scene.gltf"></a-asset-item>
+    </a-assets>
     <a-entity camera look-controls position="0 1.5 0">
         <a-cursor></a-cursor>
         <a-box id="weapon" position="0 2 -4" width="0.25" height="1" depth="1" color="blue" static-body="shape:box; mass:2"></a-box>
@@ -24,6 +31,15 @@
 
     <a-plane position="0 0 -4" rotation="-90 0 0" width="10" height="10" color="teal" static-body></a-plane>
 
+
+    <a-entity gltf-model="#imp" position="-2 2 -4"></a-entity>
+
+    <a-entity gltf-model="#cauldron" position="1 0 -2" animation-mixer></a-entity>
+
+    <a-entity gltf-model="#staff" position="1 2 -20"></a-entity>
+    <a-entity gltf-model="#moon" position="0 5 -5"></a-entity>
+
+    <a-entity gltf-model="#rock1" position="55 1 30"></a-entity>
 
     <a-sky color="#ECECEC"></a-sky>
 </a-scene>
@@ -75,5 +91,22 @@
 
 </script>
 
+
+<!--
+
+
+cauldron https://sketchfab.com/models/e6eb5febb0ef4b63b3a90206a8b96135#download
+
+imp: https://sketchfab.com/models/e4dd9c9d9ad14976a4ce0d1f6049292e
+
+dragon staff: https://sketchfab.com/models/9d96aab0ddc34aae9f7bb5ae8dfc8bd6#download
+
+moon: https://sketchfab.com/models/83c39af4bc5c478296501b80ef993855#download
+
+rock 1: https://sketchfab.com/models/6a0fa67b84a44d51b929d8450fb1ec48#download
+
+
+
+-->
 </body>
 </html>
