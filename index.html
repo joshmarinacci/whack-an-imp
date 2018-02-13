@@ -16,7 +16,6 @@
         AFRAME.registerComponent('distribute', {
             schema: {},
             init: function() {
-                console.log('making the distribute component')
                 const model = '#rock1'
                 const center = new THREE.Vector3(59,-0.8,32)
                 if($(model).hasLoaded) {
@@ -27,16 +26,13 @@
                             el.setAttribute('gltf-model', model)
                             const offset = new THREE.Vector3(i*4 + rand(-2,2), 0+rand(-0.5,0.5), j*4 - rand(-2,2));// + rand(-1, 1), 0, j-3+rand(-1, 1))
                             el.setAttribute('position', center.clone().add(offset));
+                            el.setAttribute('rotation',{x:0, y:rand(-45,45)*Math.PI/180, z:0})
+                            const scale = rand(0.5,1.5)
+                            el.setAttribute('scale',{x:scale,y:scale,z:scale})
                             $('a-scene').appendChild(el)
                         }
                     }
                 }
-
-
-
-
-//                console.log("the rock has loaded", $('#rock1').hasLoaded)
-//                el.setAttribute('gltf-model', 'url(models/rock1/scene.gltf)')
             }
         })
     </script>
@@ -47,7 +43,10 @@
 
 <a-scene
         stats
-        physics="debug:true; restitution: 0; gravity:-4.0; contactEquationStiffness:100000000; contactEquationRelaxation: 0.5;">
+        physics="debug:true; restitution: 0; gravity:-4.0; contactEquationStiffness:100000000; contactEquationRelaxation: 0.5;"
+>
+<!--         fog="type: linear; color: #3c1c71; far:40"
+-->
     <a-assets>
         <a-asset-item id="imp" src="models/imp/scene.gltf"></a-asset-item>
         <a-asset-item id="cauldron" src="models/cauldron/scene.gltf"></a-asset-item>
@@ -75,19 +74,18 @@
     <a-box id='box' position="0 0.1 -4" rotation="0 0 0" width="0.4" depth=0.25 height="0.25" color="green" dynamic-body="shape:box; mass:2"></a-box>
 
 
-    <a-plane position="0 0 -4" rotation="-90 0 0" width="100" height="100" color="teal" static-body></a-plane>
+    <a-plane position="0 0 -4" rotation="-90 0 0" width="100" height="100" color="#69851b" static-body></a-plane>
 
 
     <a-entity gltf-model="#imp" position="-2 2 -4"></a-entity>
 
     <a-entity gltf-model="#cauldron" position="1.5 0 -3.5" animation-mixer></a-entity>
 
-    <a-entity gltf-model="#moon" ></a-entity>
+    <a-entity gltf-model="#moon"></a-entity>
 
     <a-entity distribute="jitter: 2 0.5 2; center: 59 -1 32; src:#rock1; radius:3"></a-entity>
-    <!--<a-entity gltf-model="#rock1" position="55 1 30" distribute></a-entity>-->
 
-    <a-sky color="#ECECEC"></a-sky>
+    <a-sky color="#3c1c71"></a-sky>
 </a-scene>
 
 
