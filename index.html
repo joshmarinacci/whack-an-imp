@@ -14,17 +14,24 @@
             return Math.random()*(max-min) + min
         }
         AFRAME.registerComponent('distribute', {
-            schema: {},
+            schema: {
+                src: {type:'string'},
+                jitter: {type:'vec3'},
+                centerOffset: {type:'vec3'},
+                radius: {type:'number'}
+            },
             init: function() {
-                const model = '#rock1'
-                const center = new THREE.Vector3(59,-0.8,32)
-                if($(model).hasLoaded) {
-                    const s = 3
+                const center = new THREE.Vector3(this.data.centerOffset.x, this.data.centerOffset.y, this.data.centerOffset.z)
+                const jx = this.data.jitter.x
+                const jy = this.data.jitter.y
+                const jz = this.data.jitter.z
+                if($(this.data.src).hasLoaded) {
+                    const s = this.data.radius
                     for(let i = -s; i<s; i++) {
                         for(let j=-s; j<s; j++) {
                             const el = document.createElement('a-entity')
-                            el.setAttribute('gltf-model', model)
-                            const offset = new THREE.Vector3(i*4 + rand(-2,2), 0+rand(-0.5,0.5), j*4 - rand(-2,2));// + rand(-1, 1), 0, j-3+rand(-1, 1))
+                            el.setAttribute('gltf-model', this.data.src)
+                            const offset = new THREE.Vector3(i*s + rand(-jx,jx), 0+rand(-jy,jy), j*4 - rand(-jz,jz));
                             el.setAttribute('position', center.clone().add(offset));
                             el.setAttribute('rotation',{x:0, y:rand(-45,45)*Math.PI/180, z:0})
                             const scale = rand(0.5,1.5)
@@ -90,7 +97,7 @@
 
     <a-entity gltf-model="#moon"></a-entity>
 
-    <a-entity distribute="jitter: 2 0.5 2; center: 59 -1 32; src:#rock1; radius:3"></a-entity>
+    <a-entity distribute="jitter: 2 0.5 2; centerOffset: 59 -0.8 32; src:#rock1; radius:3"></a-entity>
 
     <a-sky color="#270d2c"></a-sky>
 
