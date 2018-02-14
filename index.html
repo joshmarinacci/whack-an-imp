@@ -43,9 +43,10 @@
 
 <a-scene
         stats
-        physics="debug:true; restitution: 0; gravity:-4.0; contactEquationStiffness:100000000; contactEquationRelaxation: 0.5;"
+        physics="debug:false; restitution: 0; gravity:-4.0; contactEquationStiffness:100000000; contactEquationRelaxation: 0.5;"
 >
 <!--         fog="type: linear; color: #3c1c71; far:40"
+        fog="type:linear; color: #333333; near: 1; far: 300;"
 -->
     <a-assets>
         <a-asset-item id="imp" src="models/imp/scene.gltf"></a-asset-item>
@@ -71,21 +72,34 @@
     </a-entity>
 
 <!--  -->
-    <a-box id='box' position="0 0.1 -4" rotation="0 0 0" width="0.4" depth=0.25 height="0.25" color="green" dynamic-body="shape:box; mass:2"></a-box>
+    <a-box id='box' position="0 0.1 -4" rotation="0 0 0" width="0.4" depth=0.25 height="0.25"
+           material="color: red; emissive: red; emissiveIntensity: 0.2"
+           dynamic-body="shape:box; mass:2"
+           shadow="cast:true;"
+    ></a-box>
 
 
-    <a-plane position="0 0 -4" rotation="-90 0 0" width="100" height="100" color="#69851b" static-body></a-plane>
+    <a-plane position="0 0 -4" rotation="-90 0 0" width="100" height="100" color="#52430e" static-body
+             shadow="receive:true"
+    ></a-plane>
 
 
-    <a-entity gltf-model="#imp" position="-2 2 -4"></a-entity>
+    <a-entity gltf-model="#imp" position="-2 2 -4" shadow="cast:true"></a-entity>
 
-    <a-entity gltf-model="#cauldron" position="1.5 0 -3.5" animation-mixer></a-entity>
+    <a-entity gltf-model="#cauldron" position="1.5 0 -3.5" animation-mixer shadow="cast:true"></a-entity>
 
     <a-entity gltf-model="#moon"></a-entity>
 
     <a-entity distribute="jitter: 2 0.5 2; center: 59 -1 32; src:#rock1; radius:3"></a-entity>
 
-    <a-sky color="#3c1c71"></a-sky>
+    <a-sky color="#270d2c"></a-sky>
+
+
+    <!--  shadowCameraVisible:true; -->
+    <a-entity light="type: directional; color: #ffc18f; intensity: 0.5; castShadow: true; "
+              position="31 80 -50"></a-entity>
+    <a-entity light="type: hemisphere; color: white; groundColor: #5424ff; intensity: 0.4"></a-entity>
+    <a-entity light="type: point; intensity: 1.6; distance: 5; decay: 2; color: red" position="0.275 -0.32 -3.77"></a-entity>
 </a-scene>
 
 
@@ -155,6 +169,23 @@ moon: https://sketchfab.com/models/83c39af4bc5c478296501b80ef993855#download
 rock 1: https://sketchfab.com/models/6a0fa67b84a44d51b929d8450fb1ec48#download
 
 
+
+
+//turn off default lighting
+//add ambient
+add direcitonal down and up. need some nice shadows on the rocks. should we add real shadows? cauldron maybe?
+//hemispeherical light?
+//fire light around the cauldron
+//make the moon glow
+--add fog
+make the staff glow
+--imp and other object should glow
+--how to make a gradient like skydome.
+
+
+then add sounds
+adjust random object generator to avoid the area around the camera
+adjust score; cool font; new color
 
 -->
 </body>
