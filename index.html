@@ -2,6 +2,7 @@
 <head>
     <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
     <script src="//cdn.rawgit.com/donmccurdy/aframe-extras/v3.13.1/dist/aframe-extras.min.js"></script>
+    <script src="js/random.js"></script>
     <script>
         $ = (sel) => document.querySelector(sel)
         $$ = (sel) => document.querySelectorAll(sel)
@@ -21,6 +22,7 @@
                 radius: {type:'number'}
             },
             init: function() {
+                const rg = new Random(Random.engines.mt19937().seed(10))
                 const center = new THREE.Vector3(this.data.centerOffset.x, this.data.centerOffset.y, this.data.centerOffset.z)
                 const jx = this.data.jitter.x
                 const jy = this.data.jitter.y
@@ -31,10 +33,10 @@
                         for(let j=-s; j<s; j++) {
                             const el = document.createElement('a-entity')
                             el.setAttribute('gltf-model', this.data.src)
-                            const offset = new THREE.Vector3(i*s + rand(-jx,jx), 0+rand(-jy,jy), j*4 - rand(-jz,jz));
+                            const offset = new THREE.Vector3(i*s + rg.real(-jx,jx), rg.real(-jy,jy), j*s - rg.real(-jz,jz));
                             el.setAttribute('position', center.clone().add(offset));
-                            el.setAttribute('rotation',{x:0, y:rand(-45,45)*Math.PI/180, z:0})
-                            const scale = rand(0.5,1.5)
+                            el.setAttribute('rotation',{x:0, y:rg.real(-45,45)*Math.PI/180, z:0})
+                            const scale = rg.real(0.5,1.5)
                             el.setAttribute('scale',{x:scale,y:scale,z:scale})
                             $('a-scene').appendChild(el)
                         }
@@ -61,6 +63,8 @@
         <a-asset-item id="staff" src="models/staff/scene.gltf"></a-asset-item>
         <a-asset-item id="moon" src="models/moon/scene.gltf"></a-asset-item>
         <a-asset-item id="rock1" src="models/rock1/scene.gltf"></a-asset-item>
+        <a-asset-item id="tree1" src="models/arbol1/scene.gltf"></a-asset-item>
+        <a-asset-item id="tree2" src="models/arbol2/scene.gltf"></a-asset-item>
     </a-assets>
 
 
@@ -97,8 +101,15 @@
 
     <a-entity gltf-model="#moon"></a-entity>
 
+    <a-entity gltf-model="#tree2" position="38 8.5 -10" shadow="cast:true"></a-entity>
+    <a-entity gltf-model="#tree1" position="33 5.5 -10" shadow="cast:true"></a-entity>
+
+    <a-entity gltf-model="#tree1" position="33 5.5 -30" shadow="cast:true" rotation="0 0 0"></a-entity>
+
+    <!-- rocks -->
     <a-entity distribute="jitter: 2 0.5 2; centerOffset: 59 -0.8 32; src:#rock1; radius:3"></a-entity>
 
+    <!-- background sky -->
     <a-sky color="#270d2c"></a-sky>
 
 
