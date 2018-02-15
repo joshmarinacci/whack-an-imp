@@ -87,6 +87,7 @@
            material="color: red; emissive: red; emissiveIntensity: 0.2"
            dynamic-body="shape:box; mass:2"
            shadow="cast:true;"
+           sound="src: url(./audio/cowbell.mp3); autoplay: false; loop: false;"
     ></a-box>
 
 
@@ -97,7 +98,11 @@
 
     <a-entity gltf-model="#imp" position="-2 2 -4" shadow="cast:true"></a-entity>
 
-    <a-entity gltf-model="#cauldron" position="1.5 0 -3.5" animation-mixer shadow="cast:true"></a-entity>
+    <!-- cauldron from model, animated, with looping audio, positioned in front of the camera -->
+    <a-entity  position="1.5 0 -3.5"
+              gltf-model="#cauldron"
+              animation-mixer shadow="cast:true"
+              sound="src: url(./audio/boilingwater-loop.mp3); autoplay: true; loop:true;"></a-entity>
 
     <a-entity gltf-model="#moon"></a-entity>
 
@@ -161,6 +166,7 @@
         const box = $("#box")
         if(e.detail.body.id === box.body.id && !hit) {
             hit = true
+            box.components.sound.playSound();
             score = score + 1
             $("#score").setAttribute('text','value','Score '+score)
             clearTimeout(resetId)
@@ -202,6 +208,14 @@ make the staff glow
 
 
 then add sounds
+bubble sound: https://freesound.org/people/Euphrosyyn/sounds/370217/
+cowbell: https://freesound.org/people/pj1s/sounds/34272/
+
+used ffmpg to convert them. on mac
+brew install ffmpeg
+ffmpeg -i boilingwater-loop.wav boilingwater-loop.mp3
+
+
 adjust random object generator to avoid the area around the camera
 adjust score; cool font; new color
 
