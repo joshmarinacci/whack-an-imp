@@ -92,12 +92,15 @@
               rotation="0 0 0"
               dynamic-body="shape:sphere; sphereRadius: 0.3; mass:4"
               shadow="cast:true;"
-              sound="src: url(./audio/cowbell.mp3); autoplay: false; loop: false;"
     >
-        <a-entity id='imp-model' gltf-model="#imp" position="0 -0.4 0" shadow="cast:true"></a-entity>
-        <a-sphere id='regular-model' radius="0.25" segments-height="8" segments-width="8"
-                  material="color: red; flatShading:true; emissive:red; emissiveIntensity:0.2"
+        <a-entity id='imp-model' gltf-model="#imp" position="0 -0.4 0" shadow="cast:true"
+                  sound="src: url(./audio/gah.mp3); autoplay: false; loop: false;"
+        ></a-entity>
+        <a-sphere id='egg-model' radius="0.25" segments-height="8" segments-width="8"
+                  scale="1 0.6 0.8"
+                  material="color: purple; flatShading:true; emissive:red; emissiveIntensity:0.2"
                   shadow="cast:true"
+                  sound="src: url(./audio/cowbell.mp3); autoplay: false; loop: false;"
         ></a-sphere>
 
     </a-entity>
@@ -141,50 +144,32 @@
     let score = 0;
     let hit = false
     let resetId = 0
-    let count = 0;
+    let showImp = true
     const resetBall = () => {
-        console.log("reset")
         clearTimeout(resetId)
-        count++
 
-        let showImp = (count%2===0)
+        showImp = (Math.floor(rand(0,4))!==3)
 
         $("#box").body.position.set(0, 0.6,-4)
         $("#box").body.velocity.set(0, 5,0)
         $("#box").body.angularVelocity.set(0, 0,0)
         $("#imp-model").setAttribute('visible',showImp);
-        $("#regular-model").setAttribute('visible',!showImp);
+        $("#egg-model").setAttribute('visible',!showImp);
         hit = false
         resetId = setTimeout(resetBall,6000)
     }
-//    on($('#cursor'))
-
-//    on(document,'click',(e)=>{
-//        console.log("clicked")
-//        const el = $("#box")
-//        el.body.applyImpulse(
-//            new CANNON.Vec3(0,10,0),
-//            new CANNON.Vec3(0,0.1,0)
-//        )
-//    })
-
-//    on(document,'mousemove',(e) => {
-//        const weapon = $("#weapon");
-////        weapon.body.position.set(
-////            (e.clientX-document.body.clientWidth/2)/100,
-////            (document.body.clientHeight/2-e.clientY)/100,
-////            -4)
-//        weapon.setAttribute('position',{
-//            x:(e.clientX-document.body.clientWidth/2)/100,
-//            y:(document.body.clientHeight/2-e.clientY)/100,z:-4})
-//    })
 
     on($("#weapon"),'collide',(e)=>{
         const box = $("#box")
         if(e.detail.body.id === box.body.id && !hit) {
             hit = true
-            box.components.sound.playSound();
-            score = score + 1
+            if(showImp) {
+                $("#imp-model").components.sound.playSound();
+                score = score + 1
+            } else {
+                $("#egg-model").components.sound.playSound();
+                score = score - 10
+            }
             $("#score").setAttribute('text','value','Score '+score)
             clearTimeout(resetId)
             resetId = setTimeout(resetBall,2000)
