@@ -75,7 +75,7 @@
         <!--<a-box id="weapon" position="0 2 -4" width="0.25" height="1" depth="1" color="blue" static-body="shape:box; mass:2"></a-box>-->
 
         <a-entity position="0 1 -3">
-            <a-entity rotation="-90 0 0" position="0 -2 -1" id='weapon' static-body="shape:sphere; sphereRadius:0.3; mass:2">
+            <a-entity rotation="-90 0 0" position="0 -2 -1" id='weapon' static-body="shape:sphere; sphereRadius:0.3;">
                 <a-entity position="2.3 -1.7 -16.3">
                     <a-entity gltf-model="#staff"></a-entity>
                 </a-entity>
@@ -83,21 +83,30 @@
         </a-entity>
     </a-entity>
 
-<!--  -->
-    <a-box id='box' position="0 0.1 -4" rotation="0 0 0" width="0.4" depth=0.25 height="0.25"
-           material="color: red; emissive: red; emissiveIntensity: 0.2"
-           dynamic-body="shape:box; mass:2"
-           shadow="cast:true;"
-           sound="src: url(./audio/cowbell.mp3); autoplay: false; loop: false;"
-    ></a-box>
+<!--                width="0.4" depth=0.25 height="0.25"
+              material="color: red; emissive: red; emissiveIntensity: 0.2"
+
+-->
+    <a-entity id='box'
+              position="0 0.1 -4"
+              rotation="0 0 0"
+              dynamic-body="shape:sphere; sphereRadius: 0.3; mass:4"
+              shadow="cast:true;"
+              sound="src: url(./audio/cowbell.mp3); autoplay: false; loop: false;"
+    >
+        <a-entity id='imp-model' gltf-model="#imp" position="0 -0.4 0" shadow="cast:true"></a-entity>
+        <a-sphere id='regular-model' radius="0.25" segments-height="8" segments-width="8"
+                  material="color: red; flatShading:true; emissive:red; emissiveIntensity:0.2"
+                  shadow="cast:true"
+        ></a-sphere>
+
+    </a-entity>
 
 
     <a-plane position="0 0 -4" rotation="-90 0 0" width="100" height="100" color="#52430e" static-body
              shadow="receive:true"
     ></a-plane>
 
-
-    <a-entity gltf-model="#imp" position="-2 2 -4" shadow="cast:true"></a-entity>
 
     <!-- cauldron from model, animated, with looping audio, positioned in front of the camera -->
     <a-entity  position="1.5 0 -3.5"
@@ -132,12 +141,19 @@
     let score = 0;
     let hit = false
     let resetId = 0
+    let count = 0;
     const resetBall = () => {
         console.log("reset")
         clearTimeout(resetId)
-        $("#box").body.position.set(0, 0.3,-4)
+        count++
+
+        let showImp = (count%2===0)
+
+        $("#box").body.position.set(0, 0.6,-4)
         $("#box").body.velocity.set(0, 5,0)
         $("#box").body.angularVelocity.set(0, 0,0)
+        $("#imp-model").setAttribute('visible',showImp);
+        $("#regular-model").setAttribute('visible',!showImp);
         hit = false
         resetId = setTimeout(resetBall,6000)
     }
