@@ -53,6 +53,7 @@
 <a-scene
         stats
         physics="debug:false; restitution: 0; gravity:-4.0; contactEquationStiffness:100000000; contactEquationRelaxation: 0.5;"
+        sound="src: url(./audio/octobernight2.mp3); loop:true; autoplay:true; volume:0.5;"
 >
 <!--         fog="type: linear; color: #3c1c71; far:40"
         fog="type:linear; color: #333333; near: 1; far: 300;"
@@ -210,6 +211,7 @@ make the staff glow
 then add sounds
 bubble sound: https://freesound.org/people/Euphrosyyn/sounds/370217/
 cowbell: https://freesound.org/people/pj1s/sounds/34272/
+crickets: https://freesound.org/people/sagetyrtle/sounds/62489/
 
 used ffmpg to convert them. on mac
 brew install ffmpeg
@@ -218,6 +220,11 @@ ffmpeg -i boilingwater-loop.wav boilingwater-loop.mp3
 
 adjust random object generator to avoid the area around the camera
 adjust score; cool font; new color
+
+
+realistic !== immersive
+
+add audio to scene to not have it be positional
 
 -->
 </body>
