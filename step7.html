@@ -62,10 +62,14 @@
     </a-assets>
 
     <a-entity camera look-controls position="0 1.5 0">
-        <a-cursor></a-cursor>
         <a-text id="score" value="Score" position="-0.2 -0.5 -1" color="white" width="5" anchor="left"></a-text>
-        <a-entity rotation="-90 0 0" position="0 0 -4" id='weapon' static-body="shape:sphere; sphereRadius: 0.3;">
+    </a-entity>
+    
+    <a-entity laser-controls="hand: left" raycaster="showLine:false;" line="color:orange; opacity:0.0;">
+        <a-entity rotation="-105 0 0" position="0 0 -3.5" id='weapon' static-body="shape:sphere; sphereRadius: 0.3;">
+	        <a-entity  scale="1.8 1.8 1.8" position="0 1.5 0">
             <a-entity position="2.3 -2.7 -16.3" gltf-model="#staff" ></a-entity>
+	        </a-entity>
         </a-entity>
     </a-entity>
 
@@ -74,6 +78,7 @@
               dynamic-body="shape:sphere; sphereRadius: 0.3; mass:4"
     >
         <a-entity id='imp-model' gltf-model="#imp"
+	              position="0 -0.3 0"
                   sound="src: url(./audio/gah.mp3); autoplay: false; loop: false;"></a-entity>
         <a-sphere id='egg-model' radius="0.25" segments-height="8" segments-width="8"
                   scale="1 0.6 0.8"
@@ -139,8 +144,6 @@
         const ball = $("#ball")
         if(e.detail.body.id === ball.body.id && !hit) {
             hit = true
-            score = score + 1
-            $("#score").setAttribute('text','value','Score '+score)
             if(showImp) {
                 $("#imp-model").components.sound.playSound();
                 score = score + 1
@@ -148,6 +151,7 @@
                 $("#egg-model").components.sound.playSound();
                 score = score - 10
             }
+            $("#score").setAttribute('text','value','Score '+score)
             clearTimeout(resetId)
             resetId = setTimeout(resetBall,2000)
         }
