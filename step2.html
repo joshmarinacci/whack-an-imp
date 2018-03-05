@@ -43,7 +43,7 @@
     let resetId = 0
     const resetBall = () => {
         clearTimeout(resetId)
-        $("#ball").body.position.set(1, 0.6,-4)
+        $("#ball").body.position.set(0, 0.6,-4)
         $("#ball").body.velocity.set(0, 5,0)
         $("#ball").body.angularVelocity.set(0, 0,0)
         hit = false

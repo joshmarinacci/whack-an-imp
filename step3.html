@@ -23,8 +23,8 @@
     <a-entity camera look-controls position="0 1.5 0">
         <a-cursor></a-cursor>
         <a-text id="score" value="Score" position="-0.2 -0.5 -1" color="black" width="5" anchor="left"></a-text>
-        <a-entity position="0 0 -3" id="weapon">
-            <a-entity gltf-model="#staff"></a-entity>
+        <a-entity rotation="-90 0 0" position="0 0 -4" id='weapon' static-body="shape:sphere; sphereRadius: 0.3;">
+            <a-entity position="2.3 -2.7 -16.3" gltf-model="#staff" ></a-entity>
         </a-entity>
     </a-entity>
 
@@ -47,7 +47,7 @@
     let resetId = 0
     const resetBall = () => {
         clearTimeout(resetId)
-        $("#ball").body.position.set(1, 0.6,-4)
+        $("#ball").body.position.set(0, 0.6,-4)
         $("#ball").body.velocity.set(0, 5,0)
         $("#ball").body.angularVelocity.set(0, 0,0)
         hit = false

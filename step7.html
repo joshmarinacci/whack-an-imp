@@ -4,31 +4,25 @@
     <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
     <!-- physics and other extras -->
     <script src="//cdn.rawgit.com/donmccurdy/aframe-extras/v3.13.1/dist/aframe-extras.min.js"></script>
-    <!-- alternate random number generator -->
-    <script src="js/random.js"></script>
-    <!-- utility functions -->
     <script>
         $ = (sel) => document.querySelector(sel)
         $$ = (sel) => document.querySelectorAll(sel)
         on = (elem, type, hand) => elem.addEventListener(type,hand)
     </script>
-
-
-    <!-- a component to randomly clone the selected model across a plane -->
+    <!-- alternate random number generator -->
+    <script src="js/random.js"></script>
+    <!-- our `distribute` component -->
     <script>
-        function rand(min,max) {
-            return Math.random()*(max-min) + min
-        }
         AFRAME.registerComponent('distribute', {
             schema: {
                 src: {type:'string'},
                 jitter: {type:'vec3'},
-                centerOffset: {type:'vec3'},
+                modelCenter: {type:'vec3'},
                 radius: {type:'number'}
             },
             init: function() {
                 const rg = new Random(Random.engines.mt19937().seed(10))
-                const center = new THREE.Vector3(this.data.centerOffset.x, this.data.centerOffset.y, this.data.centerOffset.z)
+                const center = new THREE.Vector3(this.data.modelCenter.x, this.data.modelCenter.y, this.data.modelCenter.z)
                 const jx = this.data.jitter.x
                 const jy = this.data.jitter.y
                 const jz = this.data.jitter.z
@@ -50,72 +44,54 @@
             }
         })
     </script>
+
 </head>
 <body>
-
-
-<!-- the scene. put background sound on the scene so it is not positional -->
-<a-scene
-        stats
-        physics="debug:false; restitution: 0; gravity:-4.0; contactEquationStiffness:100000000; contactEquationRelaxation: 0.5;"
-        sound="src: url(./audio/octobernight2.mp3); loop:true; autoplay:true; volume:0.5;"
+<a-scene stats
+         physics="debug:true;"
+         sound="src: url(./audio/octobernight2.mp3); loop:true; autoplay:true; volume:0.5;"
 >
-
-    <!-- all of the assets we will need -->
     <a-assets>
         <a-asset-item id="imp" src="models/imp/scene.gltf"></a-asset-item>
-        <a-asset-item id="cauldron" src="models/cauldron/scene.gltf"></a-asset-item>
         <a-asset-item id="staff" src="models/staff/scene.gltf"></a-asset-item>
-        <a-asset-item id="moon" src="models/moon/scene.gltf"></a-asset-item>
-        <a-asset-item id="rock1" src="models/rock1/scene.gltf"></a-asset-item>
         <a-asset-item id="tree1" src="models/arbol1/scene.gltf"></a-asset-item>
         <a-asset-item id="tree2" src="models/arbol2/scene.gltf"></a-asset-item>
+        <a-asset-item id="moon" src="models/moon/scene.gltf"></a-asset-item>
+        <a-asset-item id="cauldron" src="models/cauldron/scene.gltf"></a-asset-item>
+        <a-asset-item id="rock1" src="models/rock1/scene.gltf"></a-asset-item>
     </a-assets>
 
-
-    <!-- camera contains the weapon and the score -->
     <a-entity camera look-controls position="0 1.5 0">
         <a-cursor></a-cursor>
-        <a-text id="score" value="Score" position="-0.2 -0.5 -1" color="red" width="5" anchor="left"></a-text>
-
-        <a-entity position="0 1 -3">
-            <a-entity rotation="-90 0 0" position="0 -2 -1" id='weapon' static-body="shape:sphere; sphereRadius:0.3;">
-                <a-entity position="2.3 -1.7 -16.3">
-                    <a-entity gltf-model="#staff"></a-entity>
-                </a-entity>
-            </a-entity>
+        <a-text id="score" value="Score" position="-0.2 -0.5 -1" color="white" width="5" anchor="left"></a-text>
+        <a-entity rotation="-90 0 0" position="0 0 -4" id='weapon' static-body="shape:sphere; sphereRadius: 0.3;">
+            <a-entity position="2.3 -2.7 -16.3" gltf-model="#staff" ></a-entity>
         </a-entity>
     </a-entity>
 
-
-    <!-- the ball contains two models that we swap -->
     <a-entity id='ball'
               position="0 0.1 -4"
-              rotation="0 0 0"
               dynamic-body="shape:sphere; sphereRadius: 0.3; mass:4"
     >
-        <a-entity id='imp-model' gltf-model="#imp" position="0 -0.4 0"
-                  sound="src: url(./audio/gah.mp3); autoplay: false; loop: false;"
-        ></a-entity>
+        <a-entity id='imp-model' gltf-model="#imp"
+                  sound="src: url(./audio/gah.mp3); autoplay: false; loop: false;"></a-entity>
         <a-sphere id='egg-model' radius="0.25" segments-height="8" segments-width="8"
                   scale="1 0.6 0.8"
                   material="color: purple; flatShading:true; emissive:red; emissiveIntensity:0.2"
                   sound="src: url(./audio/cowbell.mp3); autoplay: false; loop: false;"
         ></a-sphere>
-
     </a-entity>
 
+    <!-- the ground --->
+    <a-plane color="#52430e"
+             static-body
+             rotation="-90 0 0" width="100" height="100"  shadow="receive:true"></a-plane>
 
-    <!-- ground -->
-    <a-plane position="0 0 -4" rotation="-90 0 0" width="100" height="100" color="#52430e" static-body shadow="receive:true"></a-plane>
 
-
-    <!-- cauldron from model, animated, with looping audio, positioned in front of the camera -->
-    <a-entity  position="1.5 0 -3.5"
-              gltf-model="#cauldron"
-              animation-mixer
-              sound="src: url(./audio/boilingwater-loop.mp3); autoplay: true; loop:true;"
-    ></a-entity>
+    <!-- cauldron -->
+    <a-entity  position="1.5 0 -3.5" gltf-model="#cauldron"
+               sound="src: url(./audio/boilingwater-loop.mp3); autoplay: true; loop:true;"
+               animation-mixer></a-entity>
 
     <!-- the moon -->
     <a-entity gltf-model="#moon"></a-entity>
@@ -126,20 +102,21 @@
     <a-entity gltf-model="#tree1" position="33 5.5 -30"></a-entity>
 
     <!-- rocks -->
-    <a-entity distribute="jitter: 2 0.5 2; centerOffset: 59 -0.8 32; src:#rock1; radius:3"></a-entity>
+    <a-entity distribute="jitter: 2 0.5 2; modelCenter: 59 -0.8 32; src:#rock1; radius:3"></a-entity>
+
 
     <!-- background sky -->
     <a-sky color="#270d2c"></a-sky>
-
-
-    <!--  shadowCameraVisible:true; -->
-    <a-entity light="type: directional; color: #ffc18f; intensity: 0.5; castShadow: true; "
-              position="31 80 -50"></a-entity>
+    <!-- hemisphere light going from white to dark blue -->
     <a-entity light="type: hemisphere; color: white; groundColor: #5424ff; intensity: 0.4"></a-entity>
+    <!-- firelight -->
     <a-entity light="type: point; intensity: 1.6; distance: 5; decay: 2; color: red" position="0.275 -0.32 -3.77"></a-entity>
+    <!-- directional moon light -->
+    <a-entity light="type: directional; color: #ffffff; intensity: 0.5; castShadow:true;"
+              position="31 80 -50"></a-entity>
+
+
 </a-scene>
-
-
 
 <script>
     let score = 0;
@@ -148,12 +125,10 @@
     let showImp = true
     const resetBall = () => {
         clearTimeout(resetId)
-
-        showImp = (Math.floor(rand(0,4))!==3)
-
         $("#ball").body.position.set(0, 0.6,-4)
         $("#ball").body.velocity.set(0, 5,0)
         $("#ball").body.angularVelocity.set(0, 0,0)
+        showImp = (Math.floor(Math.random()*4)!==0)
         $("#imp-model").setAttribute('visible',showImp);
         $("#egg-model").setAttribute('visible',!showImp);
         hit = false
@@ -164,6 +139,8 @@
         const ball = $("#ball")
         if(e.detail.body.id === ball.body.id && !hit) {
             hit = true
+            score = score + 1
+            $("#score").setAttribute('text','value','Score '+score)
             if(showImp) {
                 $("#imp-model").components.sound.playSound();
                 score = score + 1
@@ -171,16 +148,16 @@
                 $("#egg-model").components.sound.playSound();
                 score = score - 10
             }
-            $("#score").setAttribute('text','value','Score '+score)
             clearTimeout(resetId)
             resetId = setTimeout(resetBall,2000)
         }
     })
 
     setTimeout(resetBall,3000)
-
 </script>
+
 
 
 </body>
 </html>
+
