@@ -1,0 +1,74 @@
+<html>
+<head>
+    <!-- aframe itself -->
+    <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
+    <!-- physics and other extras -->
+    <script src="//cdn.rawgit.com/donmccurdy/aframe-extras/v3.13.1/dist/aframe-extras.min.js"></script>
+    <script>
+        $ = (sel) => document.querySelector(sel)
+        $$ = (sel) => document.querySelectorAll(sel)
+        on = (elem, type, hand) => elem.addEventListener(type,hand)
+    </script>
+
+</head>
+<body>
+<a-scene stats
+         physics="debug:true;"
+>
+    <a-assets>
+        <a-asset-item id="imp" src="models/imp/scene.gltf"></a-asset-item>
+        <a-asset-item id="staff" src="models/staff/scene.gltf"></a-asset-item>
+    </a-assets>
+
+    <a-entity camera look-controls position="0 1.5 0">
+        <a-cursor></a-cursor>
+        <a-text id="score" value="Score" position="-0.2 -0.5 -1" color="black" width="5" anchor="left"></a-text>
+        <a-entity position="0 0 -3" id="weapon">
+            <a-entity gltf-model="#staff"></a-entity>
+        </a-entity>
+    </a-entity>
+
+    <a-entity id='ball'
+              position="0 1 -4"
+              dynamic-body
+    >
+        <a-entity id='imp-model' gltf-model="#imp"></a-entity>
+    </a-entity>
+
+    <a-plane color='red'
+             static-body
+             rotation="-90 0 0" width="100" height="100"></a-plane>
+
+</a-scene>
+
+<script>
+    let score = 0;
+    let hit = false
+    let resetId = 0
+    const resetBall = () => {
+        clearTimeout(resetId)
+        $("#ball").body.position.set(1, 0.6,-4)
+        $("#ball").body.velocity.set(0, 5,0)
+        $("#ball").body.angularVelocity.set(0, 0,0)
+        hit = false
+        resetId = setTimeout(resetBall,6000)
+    }
+
+    on($("#weapon"),'collide',(e)=>{
+        const ball = $("#ball")
+        if(e.detail.body.id === ball.body.id && !hit) {
+            hit = true
+            score = score + 1
+            $("#score").setAttribute('text','value','Score '+score)
+            clearTimeout(resetId)
+            resetId = setTimeout(resetBall,2000)
+        }
+    })
+
+    setTimeout(resetBall,3000)
+</script>
+
+
+
+</body>
+</html>
