@@ -48,7 +48,7 @@
 </head>
 <body>
 <a-scene stats
-         physics="debug:true;"
+         physics="debug:false;"
          sound="src: url(./audio/octobernight2.mp3); loop:true; autoplay:true; volume:0.5;"
 >
     <a-assets>
@@ -63,12 +63,15 @@
 
     <a-entity camera look-controls position="0 1.5 0">
         <a-text id="score" value="Score" position="-0.2 -0.5 -1" color="white" width="5" anchor="left"></a-text>
+        <a-entity rotation="-90 0 0" position="0 0 -4" class='weapon gaze' static-body="shape:sphere; sphereRadius: 0.3;">
+            <a-entity position="2.3 -2.7 -16.3" gltf-model="#staff" ></a-entity>
+        </a-entity>
     </a-entity>
     
-    <a-entity laser-controls="hand: left" raycaster="showLine:false;" line="color:orange; opacity:0.0;">
-        <a-entity rotation="-105 0 0" position="0 0 -3.5" id='weapon' static-body="shape:sphere; sphereRadius: 0.3;">
+    <a-entity id='laser' laser-controls="hand: left" raycaster="showLine:false;" line="opacity:0.0;">
+        <a-entity rotation="-105 0 0" position="0 0 -3.5" class='weapon dof6' static-body="shape:sphere; sphereRadius: 0.3;">
 	        <a-entity  scale="1.8 1.8 1.8" position="0 1.5 0">
-            <a-entity position="2.3 -2.7 -16.3" gltf-model="#staff" ></a-entity>
+	            <a-entity position="2.3 -2.7 -16.3" gltf-model="#staff" ></a-entity>
 	        </a-entity>
         </a-entity>
     </a-entity>
@@ -124,6 +127,49 @@
 </a-scene>
 
 <script>
+	
+	function setEnabled(sel,vis) {
+		const elem = $(sel)
+		elem.setAttribute('visible', vis)
+		if(elem.components['static-body']) {
+			const sb = elem.components['static-body'];
+			if(vis) {
+				sb.play()
+			} else {
+				sb.pause()
+			}
+		}
+	}
+	
+	function switch6DOF() {
+		$('#laser').setAttribute('visible',true)
+		setEnabled('.weapon.gaze',false)
+		setEnabled('.weapon.dof6',true)
+	}
+	
+	
+	function switchGaze() {
+		$('#laser').setAttribute('visible',false)
+		setEnabled('.weapon.gaze',true)
+		setEnabled('.weapon.dof6',false)
+	}
+	
+	on($('a-scene'),'enter-vr',()=>{
+		if(AFRAME.utils.device.checkHeadsetConnected()) {
+			switch6DOF()
+		} else {
+			switchGaze()
+		}
+	})
+	on($('a-scene'),'exit-vr',switchGaze)
+
+	//always start up in gaze mode	
+	on($('a-scene'),'loaded',switchGaze)
+
+
+
+	//console.log("is mobile",AFRAME.utils.device.isMobile(), AFRAME.utils.device.checkHeadsetConnected())
+	//$('.weapon').forEach(wep=>wep.setAttribute('visible', false))
     let score = 0;
     let hit = false
     let resetId = 0
@@ -140,7 +186,7 @@
         resetId = setTimeout(resetBall,6000)
     }
 
-    on($("#weapon"),'collide',(e)=>{
+	function handleCollsion(e) {
         const ball = $("#ball")
         if(e.detail.body.id === ball.body.id && !hit) {
             hit = true
@@ -155,8 +201,9 @@
             clearTimeout(resetId)
             resetId = setTimeout(resetBall,2000)
         }
-    })
 
+	}
+    $$(".weapon").forEach((wep)=> on(wep,'collide',handleCollsion))
     setTimeout(resetBall,3000)
 </script>
 
