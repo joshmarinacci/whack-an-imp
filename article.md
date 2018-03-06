@@ -7,7 +7,7 @@ Unlike with my previous tutorials, in this one we will walk through creating the
 
 To start off we will begin with an empty HTML file with aframe included.
 
-```
+``` html
 <html>
   <head>
     <!-- aframe itself -->
@@ -17,6 +17,7 @@ To start off we will begin with an empty HTML file with aframe included.
   </body>
 </html>
 ```
+
 
 At first we won’t make the scene fancy at all. We just want to prove that our concept will work, so we won’t add any lighting, models, or sound effects. We will keep it simply until the underlying concept is proven, then we will make it pretty.
 
@@ -73,7 +74,7 @@ you are working with aframe and your object won’t show up, first check if it�
 
 Great. Now all of the elements of our scene are here. If you followed along you should have a scene on your desktop that looks like this.
 
-[images/Firefox NightlyScreenSnapz021.png]
+![screenshot](./images/Firefox%20NightlyScreenSnapz021.png)
 
 If you play with this demo you’ll see that you can move your head and the paddle moves with it, but trying to hit the ball won’t do anything. 
 That’s because we just have geometry. The computer knows how our objects look but nothing about how they behave. For that we need physics.
